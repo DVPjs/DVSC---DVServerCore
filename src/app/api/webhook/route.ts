@@ -1,11 +1,6 @@
 import { NextResponse } from 'next/server';
 import { exec } from 'child_process';
-
-// Whitelist of allowed commands
-const ALLOWED_COMMANDS = new Set([
-    'ls -la',
-    'whoami'
-]);
+import { ALLOWED_COMMANDS } from '@/config/commands';
 
 export async function POST(request: Request) {
   try {
