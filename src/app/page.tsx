@@ -5,9 +5,9 @@ type Status = 'ok' | 'MID' | 'bad' | 'FUCKED' | 'loading...';
 
 function getStatus(ping: number | null): Status {
   if (ping === null) return 'loading...';
-  if (ping <= 5) return 'ok';
-  if (ping <= 20) return 'MID';
-  if (ping <= 100) return 'bad';
+  if (ping < 100) return 'ok';
+  if (ping < 250) return 'MID';
+  if (ping < 1500) return 'bad';
   return 'FUCKED';
 }
 
@@ -17,12 +17,12 @@ export default function Home() {
   useEffect(() => {
     // Simulate a ping check that updates every 3 seconds
     const interval = setInterval(() => {
-      const randomPing = Math.floor(Math.random() * 1100);
+      const randomPing = Math.floor(Math.random() * 2000);
       setPing(randomPing);
     }, 3000);
 
     // Initial ping
-    setPing(Math.floor(Math.random() * 1100));
+    setPing(Math.floor(Math.random() * 2000));
 
     return () => clearInterval(interval);
   }, []);
