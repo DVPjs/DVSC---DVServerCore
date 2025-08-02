@@ -1,11 +1,28 @@
 import { NextResponse } from 'next/server';
 import { exec } from 'child_process';
 
+// Whitelist of allowed commands
+const ALLOWED_COMMANDS = new Set([
+    'ls -la',
+    'whoami'
+]);
+
 export async function POST(request: Request) {
   try {
     const payload = await request.json();
 
     if (payload.command && typeof payload.command === 'string') {
+      // Security Check: Only run commands from the whitelist
+      if (!ALLOWED_COMMANDS.has(payload.command)) {
+        return NextResponse.json(
+          {
+            status: 'error',
+            message: `Command not allowed: ${payload.command}`,
+          },
+          { status: 403 } // 403 Forbidden
+        );
+      }
+      
       return new Promise((resolve) => {
         exec(payload.command, (error, stdout, stderr) => {
           if (error) {
