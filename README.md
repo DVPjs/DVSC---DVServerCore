@@ -30,9 +30,9 @@ DVPanel uses DVSC to:
 ### Getting Started:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/DVSC.git
+git clone https://github.com/DVPjs/DVSC---DVServerCore.git
 cd DVSC
-cp .env.example .env.local
+
 # Edit .env.local and domain-config.js with your setup
 npm install
 npm run dev
