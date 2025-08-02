@@ -13,25 +13,26 @@ function getStatus(ping: number | null): Status {
 
 export default function Home() {
   const [ping, setPing] = useState<number | null>(null);
+  const [status, setStatus] = useState<Status>('loading...');
 
   useEffect(() => {
-    // Simulate a ping check that updates every 3 seconds
-    const interval = setInterval(() => {
+    const updatePing = () => {
       const randomPing = Math.floor(Math.random() * 2000);
       setPing(randomPing);
-    }, 3000);
+      setStatus(getStatus(randomPing));
+    };
 
-    // Initial ping
-    setPing(Math.floor(Math.random() * 2000));
+    updatePing();
+    const interval = setInterval(updatePing, 3000);
 
     return () => clearInterval(interval);
   }, []);
 
-  const status = getStatus(ping);
-
   return (
-    <main>
+    <main style={{ padding: '1rem' }}>
       <h1>DVSC DVServerCores status is ({status})</h1>
+      <p>ok is &lt; 100ms ~ MID is &lt; 250ms ~ bad is &lt; 1500ms ~ FUCKED is anything after</p>
+      <br />
       <ul>
         <li>Status: {status.toUpperCase()}</li>
         <li>Ping: {ping !== null ? `${ping}ms` : '...'}</li>
