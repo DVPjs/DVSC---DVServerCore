@@ -1,0 +1,4 @@
+Welcome to DVSCore.
+This is a sample file that you can read and edit using the File Management tool.
+Try changing this text and clicking "Save Content".
+You can also use the terminal: `cat welcome.txt`
