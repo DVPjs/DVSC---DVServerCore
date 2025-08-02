@@ -1,42 +1,42 @@
 #!/bin/bash
 
-# Make the script executable
-chmod +x "$0"
+# === DVSC SETUP SCRIPT ===
+# Assumes you're already inside the DVSC repo directory
 
-# Clone repo and enter
-git clone https://github.com/YOUR_USERNAME/DVSC.git
-cd DVSC || exit 1
+# Generate a 12-digit alphanumeric random password
+SECRET=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 12)
 
-# Generate random 12-character password
-SECRET=$(openssl rand -base64 18 | tr -dc 'A-Za-z0-9' | head -c12)
-
-# Create .env.local
+# Create .env.local with the generated secret
 echo "DVS_WEBHOOK_SECRET=$SECRET" > .env.local
 
+# Display the secret to the user
+echo -e "\n✅ Generated .env.local with secret:"
+echo "DVS_WEBHOOK_SECRET=$SECRET"
+echo
+
+# Set executable permissions on this script (optional if already done)
+chmod +x setup.sh
+
 # Install dependencies
+echo "📦 Installing npm dependencies..."
 npm install
 
-# Start daemon
-npm run dev &
+# Start the daemon
+echo -e "\n🚀 Starting the DVSC daemon..."
+npm run dev
 
-# Output setup info
-echo ""
-echo "✅ Setup complete!"
-echo "🔐 Your DVS_WEBHOOK_SECRET is: $SECRET"
-echo ""
-echo "🛠️ IMPORTANT:"
-echo "Edit /home/user/studio/src/config.ts to add your domain(s) like this:"
-echo ""
-cat << 'EOF'
-/**
- * Configuration for domain whitelisting (CORS).
- * Add the domains that are allowed to make requests to this server.
- */
-export const allowedOrigins: string[] = [
-  'https://yourdomain.com'
-];
-EOF
-echo ""
-echo "🛡️ To control command permissions, edit the allow/deny lists inside DVSC source:"
-echo " - You can implement either a 'whitelist' or 'blacklist' for incoming command requests."
-echo ""
+# Final instructions
+echo -e "\n🔧 You must manually configure domain whitelisting:"
+echo "Edit: /home/$(whoami)/studio/src/config.ts"
+echo
+echo "Example:"
+echo 'export const allowedOrigins: string[] = ['
+echo "  'https://your-frontend-domain.com'"
+echo '];'
+echo
+
+echo "✅ Want to whitelist or blacklist commands?"
+echo "- Open src/utils/filter.ts or similar"
+echo "- Add command names under:"
+echo "    export const commandBlacklist = ['exampleCommand']"
+echo "    export const commandWhitelist = ['safeCommand']"
