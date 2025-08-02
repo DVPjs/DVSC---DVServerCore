@@ -1,7 +1,13 @@
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <h1 className="text-4xl font-bold">Hello, world!</h1>
+    <main>
+      <h1>Daemon Status</h1>
+      <ul>
+        <li>Status: Running</li>
+        <li>Uptime: 2 days, 12 hours, 34 minutes</li>
+        <li>CPU Usage: 15%</li>
+        <li>Memory Usage: 256 MB</li>
+      </ul>
     </main>
   );
 }
