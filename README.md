@@ -30,12 +30,13 @@ DVPanel uses DVSC to:
 ### Getting Started:
 
 ```bash
+# Clone the daemon from github
 git clone https://github.com/DVPjs/DVSC---DVServerCore.git
+# Go to the cloned DIR
 cd DVSC
-
-# Edit .env.local and domain-config.js with your setup
-npm install
-npm run dev
+# Give the setup script PERMS to be ran
+chmod +x setup.sh && ./setup.sh
+# Get started with the simple guide and connect to DVPanel or build on from this next.js daemon.
 ```
 
 ---
