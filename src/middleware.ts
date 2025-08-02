@@ -2,22 +2,28 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { allowedOrigins } from './config';
 
 export function middleware(request: NextRequest) {
-  // Request Logging
   const { ip, method, nextUrl } = request;
   const timestamp = new Date().toISOString();
   console.log(
     `[${timestamp}] ${method} ${nextUrl.pathname} - IP: ${ip || 'N/A'}`
   );
 
-  // CORS Whitelisting
+  if (nextUrl.pathname.startsWith('/api/webhook')) {
+    const authHeader = request.headers.get('Authorization');
+    const expectedToken = `Bearer ${process.env.DVS_WEBHOOK_SECRET}`;
+
+    if (authHeader !== expectedToken) {
+      return new NextResponse('Unauthorized', { status: 401 });
+    }
+    return NextResponse.next();
+  }
+  
   const origin = request.headers.get('origin');
   
-  // Allow requests with no origin (e.g., same-origin, server-to-server)
   if (!origin) {
     return NextResponse.next();
   }
 
-  // In development, allow requests from localhost.
   if (process.env.NODE_ENV === 'development' && new URL(origin).hostname === 'localhost') {
     return addCorsHeaders(NextResponse.next(), origin);
   }
@@ -26,7 +32,6 @@ export function middleware(request: NextRequest) {
     return addCorsHeaders(NextResponse.next(), origin);
   }
 
-  // If origin is not allowed, return a forbidden response.
   return new NextResponse('Forbidden: Origin not allowed', {
     status: 403,
   });
@@ -41,5 +46,5 @@ function addCorsHeaders(response: NextResponse, origin: string): NextResponse {
 }
 
 export const config = {
-  matcher: '/api/:path*', // Adjust this to match your API routes if any
+  matcher: ['/api/:path*'],
 };
